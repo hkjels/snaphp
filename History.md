@@ -1,4 +1,12 @@
 
+0.0.03 / 2012-06-25 
+==================
+
+  * Minor $hooks was not defined as a local
+  * Added versioning
+  * Bootstrapping & OO-only
+  * Initial commit
+
 0.0.02 / 2012-06-25 
 ==================
 
