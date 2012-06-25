@@ -1,0 +1,25 @@
+{
+    "name": "hkjels/bold"
+  , "authors": [{
+      "name": "Henrik Kjelsberg"
+    , "email": "henrik@kjelsberg.net"
+    , "homepage": "http://take.no/"
+    , "role": "developer"
+  }]
+  , "description": "A lightweight, straightforward php-framework"
+  , "keywords": ["bold", "framework", "sinatra", "express", "simple", "SPDY"]
+  , "homepage": "http://hkjels.github.com/bold/"
+  , "license": "MIT"
+  , "type": "library"
+  , "require": {
+      "php": ">=5.3.10"
+    , "behat/behat": ">=2.4"
+    , "doxphp/doxphp": ">=0.2.0"
+  }
+  , "autoload": {
+      "psr-0": { "Bold": "src/" }
+    }
+  , "config": {
+      "bin-dir": "bin/"
+  }
+}
