@@ -10,21 +10,24 @@ $GLOBALS['console'] = new Bold\Util\Console();
 $GLOBALS['hooks'] = new Bold\Util\Hooks();
 
 /**
- * A few native hooks
+ * Benchmark timer
  */
 
 global $hooks;
-$hooks->add('pre-load', function ($req, $res) {
-  global $console;
-  $console->time('load');
-});
+global $console;
+$console->time('load');
+
+/**
+ * A few native hooks
+ */
+
 $hooks->add('middleware', function ($req, $res) {
   $res->setHeader('X-Powered-By', 'Bold');
 });
 $hooks->add('pre-run', function () {});
 $hooks->add('post-run', function () {
   global $console;
-  $console->timeEnd('load');
+  // $console->timeEnd('load');
   $console->output();
 });
 

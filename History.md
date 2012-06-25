@@ -1,4 +1,14 @@
 
+0.0.05 / 2012-06-25 
+==================
+
+  * Added compatibility for templating-engines
+  * Corrected bug with $console->trace
+  * Minor $hooks was not defined as a local
+  * Added versioning
+  * Bootstrapping & OO-only
+  * Initial commit
+
 0.0.04 / 2012-06-25 
 ==================
 
