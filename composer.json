@@ -6,6 +6,7 @@
     , "homepage": "http://take.no/"
     , "role": "developer"
   }]
+  , "version": "0.0.02"
   , "description": "A lightweight, straightforward php-framework"
   , "keywords": ["bold", "framework", "sinatra", "express", "simple", "SPDY"]
   , "homepage": "http://hkjels.github.com/bold/"
