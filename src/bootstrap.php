@@ -14,9 +14,17 @@ $GLOBALS['hooks'] = new Bold\Util\Hooks();
  */
 
 global $hooks;
-$hooks->add('middleware', function ($req, $res) {
-  $res->setHeader('X-Powered-By', 'Codeable');
+$hooks->add('pre-load', function ($req, $res) {
+  global $console;
+  $console->time('load');
 });
-$hooks->add('pre-dispatch', function () {});
-$hooks->add('post-dispatch', function () {});
+$hooks->add('middleware', function ($req, $res) {
+  $res->setHeader('X-Powered-By', 'Bold');
+});
+$hooks->add('pre-run', function () {});
+$hooks->add('post-run', function () {
+  global $console;
+  $console->timeEnd('load');
+  $console->output();
+});
 

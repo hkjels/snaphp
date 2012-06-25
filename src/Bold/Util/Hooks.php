@@ -1,6 +1,6 @@
 <?php
 
-namespace bold\util;
+namespace Bold\Util;
 
 /**
  * Hooks

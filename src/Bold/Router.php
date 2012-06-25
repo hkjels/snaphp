@@ -1,6 +1,6 @@
 <?php
 
-namespace bold;
+namespace Bold;
 
 /**
  * Router
@@ -66,15 +66,15 @@ class Router {
   }
 
   /**
-   * dispatch
+   * run
    *
-   * Run through routing
+   * Loop through routes to find the one responsible for the URI
    */
 
-  public function dispatch () {
+  public function run () {
     global $console, $hooks;
 
-    $hooks->execute('pre-dispatch');
+    $hooks->execute('pre-run');
 
     $this->res->writeHeaders();
     foreach ($this->routes[$this->req->method] as $path => $callbacks) {
@@ -82,14 +82,14 @@ class Router {
       if (preg_match($path, $this->req->path) >= 1) {
         foreach ($callbacks as $cb) {
           if (Response::PROCEED != call_user_func_array($cb, array($this->req, $this->res))) {
-            $hooks->execute('post-dispatch');
+            $hooks->execute('post-run');
             return;
           }
         }
       }
     }
 
-    $hooks->execute('post-dispatch');
+    $hooks->execute('post-run');
   }
 
   /**
