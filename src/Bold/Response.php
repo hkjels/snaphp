@@ -23,6 +23,7 @@ class Response {
    */
 
   protected $headers = array();
+  protected $parser = 'Bold\Php';
 
   /**
    * The response-body
@@ -131,7 +132,8 @@ class Response {
    * @return Response
    */
 
-  public function render ($file, $parser = 'Bold\Php') {
+  public function render ($file) {
+    $parser = Config::getInstance()->get('view parser');
     if (!is_callable($parser, true)) throw new \Exception("Unknown template-parser $parser");
 
     // Initialize template-parser
