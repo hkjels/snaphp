@@ -4,6 +4,13 @@ namespace Bold\Util;
 
 /**
  * Hooks
+ *
+ * With hooks, you can insert functionality at the given point in time when a hook
+ * is executed. Native-hooks retrieve the request and response-objects as arguments,
+ * these arguments can be overriden by passing an arguments-array to the `adder`.
+ *
+ * Existing native-hooks:
+ *  load, pre-run, post-run
  */
 
 class Hooks {
@@ -20,7 +27,7 @@ class Hooks {
    * @param [$args] array Numerical array of arguments to be passed to named function
    */
 
-  public function add ($event, $fn, $args = array()) {
+  public function add ($event, $fn, $args = null) {
     $this->hooks[$event][] = array('fn' => $fn, 'args' => $args);
   }
 
@@ -29,13 +36,17 @@ class Hooks {
    *
    * Fire of all hooks at the specified event
    * @param $event string
-   * @param $args array  Will override existing arguments if any
+   * @param $args array
    */
 
-  public function execute($event, $args = null) {
-    if (!isset($this->hooks[$event])) throw new \Exception("$event-hook is not defined");
+  public function execute($event, $args = array()) {
+    if (!isset($this->hooks[$event])) {
+      global $console;
+      $console->warn("$event-hook is not defined");
+      return;
+    }
     foreach ($this->hooks[$event] as $hook) {
-      $args = $args != null ? $args : $hook['args'];
+      $args = $hook['args'] !== null ? $hook['args'] : $args;
       call_user_func_array($hook['fn'], $args);
     }
   }

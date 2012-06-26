@@ -11,12 +11,6 @@ namespace Bold;
 class Router {
 
   /**
-   * How many times __call has been executed
-   */
-
-  private $times = 0;
-
-  /**
    * HTTP/1.1 Methods
    */
 
@@ -55,12 +49,6 @@ class Router {
   public function __call ($fn, $callbacks) {
     global $hooks;
     if (!in_array($fn, $this->methods)) throw new \Exception("$fn is an unknown HTTP-method");
-
-    if ($this->times == 0) {
-      $hooks->execute('middleware', array('req' => &$this->req, 'res' => &$this->res));
-    }
-    $this->times++;
-
     $path = array_shift($callbacks);
     $callbacks = (array)$callbacks;
     $this->addRoute($fn, $path, $callbacks);
@@ -74,7 +62,7 @@ class Router {
 
   public function run () {
     global $hooks;
-    $hooks->execute('pre-run');
+    $hooks->execute('pre-run', array('req' => &$this->req, 'res' => &$this->res));
 
     // Loop through and execute controller-code
 
@@ -88,12 +76,14 @@ class Router {
 
           if (Response::PROCEED != call_user_func_array($cb, array($this->req, $this->res))) {
             $this->res->end();
+            $hooks->execute('post-run', array('req' => &$this->req, 'res' => &$this->res));
             return;
           }
         }
       }
     }
     $this->res->end();
+    $hooks->execute('post-run', array('req' => &$this->req, 'res' => &$this->res));
   }
 
   /**

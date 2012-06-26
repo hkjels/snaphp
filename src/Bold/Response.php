@@ -119,9 +119,6 @@ class Response {
 
     // PS. Response->end should only be run ones
     $this->body = array('ended');
-
-    global $hooks;
-    $hooks->execute('post-run');
   }
 
   /**

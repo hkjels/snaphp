@@ -36,8 +36,15 @@ class Bold extends Router {
    */
 
   function __construct () {
+    global $hooks;
+
+    // Make request and response available
+    // from a protected scope
+
     $this->req = new Request();
     $this->res = new Response();
+
+    $hooks->execute('load', array('req' => &$this->req, 'res' => &$this->res));
   }
 
   public function configure($env) {}
