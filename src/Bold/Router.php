@@ -97,18 +97,22 @@ class Router {
    * Normalize path to regular expression
    *
    * @param $path string
-   * @return string Regular expression
+   * @return string Regular-expression
    */
 
   private function normalizePath ($path) {
     if (preg_match('/^\/.*\/[a-z]+$/', $path)) return $path;
+
+    // Make array into string
+
     if (is_array($path)) $path = '('+implode('|', $path)+')';
 
-    $path = "^$path/?$";
-    $path = str_replace('/', '\/', $path);
-    $path = "/$path/";
+    // Make string into regular expression
 
-    return $path;
+    $path = str_replace('/', '\/', $path);
+    // $path = preg_replace('/\[\:(\w)+\]/g', '(\w)+', $path);
+
+    return "/^$path\/?/";
   }
 }
 

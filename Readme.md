@@ -1,10 +1,4 @@
 
-# Build failes
-
-__Bold is not yet production-ready, so I would recommend that you try other
-alternatives for now.__
-
-
 # Bold
 
 __A lightweight, straightforward php-framework__
@@ -14,7 +8,7 @@ __A lightweight, straightforward php-framework__
 
     {
       "require": {
-        "hkjels/Bold": ">=0.0.01"
+        "hkjels/Bold": ">=0.0.05"
       }
       , "config": {
           "bin-dir": "bin/"
@@ -26,7 +20,7 @@ __A lightweight, straightforward php-framework__
 
 ## Usage
 
-    $app = new \Bold\Bold();
+    $app = new Bold\Bold();
     $app->get('/', function ($req, $res) {
       $res->write('pong!');
       echo 'Ping ';

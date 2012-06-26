@@ -22,7 +22,7 @@
   , "autoload": {
       "files": ["src/bootstrap.php"]
     , "psr-0": { "Bold": "src/" }
-    }
+  }
   , "config": {
       "bin-dir": "bin/"
   }
