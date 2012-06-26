@@ -26,7 +26,7 @@ use Bold\Response;
 
 class Bold extends Router {
 
-  const VERSION = '0.0.05';
+  const VERSION = '0.0.06';
 
   public $req, $res;
 
