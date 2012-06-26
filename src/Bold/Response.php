@@ -23,7 +23,12 @@ class Response {
    */
 
   protected $headers = array();
-  protected $parser = 'Bold\Php';
+
+  /**
+   * Local variables
+   */
+
+  protected $lvars = array();
 
   /**
    * The response-body
@@ -32,6 +37,23 @@ class Response {
    */
 
   protected $body = array();
+
+  public function local () {
+    if (func_num_args() > 1) list($key, $value) = func_get_args();
+    else $key = func_get_arg(0);
+
+    if (!is_string($key)) {
+      throw new \InvalidArgumentException('Only strings are allowed as local name');
+    }
+
+    if (isset($value)) $this->lvars[$key] = $value;
+    else return $this->lvars[$key];
+  }
+
+  public function locals ($locals = array()) {
+    if (empty($locals)) return $this->lvars;
+    foreach ($locals as $key => $value) $this->local($key, $value);
+  }
 
   /**
    * Set header
@@ -83,9 +105,9 @@ class Response {
    */
 
   protected function writeBody() {
-    foreach ($this->body as $body) {
-      echo "$body\n";
-    }
+    $body = implode($this->body);
+    unset($this->body);
+    echo eval(' ?>'.$body.'<?php ');
   }
 
   /**
@@ -111,38 +133,59 @@ class Response {
    */
 
   public function end ($body = '') {
-    // Prevent from running again
-    if (isset($this->body[0]) && $this->body[0] == 'ended') return;
+    // Prevent re-runs
+    if (!isset($this->body)) return;
 
     $this->send($body);
     $this->writeHeaders();
     $this->writeBody();
-
-    // PS. Response->end should only be run ones
-    $this->body = array('ended');
   }
 
   /**
    * Render
    *
-   * Render a given template to $this->body[]
+   * Render a given template using Response->local('layout') as base.
    *
    * @param $file string
-   * @param $parser function
+   * @param $locals array Array of local variables
    * @return Response
    */
 
-  public function render ($file) {
-    $parser = Config::getInstance()->get('view parser');
-    if (!is_callable($parser, true)) throw new \Exception("Unknown template-parser $parser");
+  public function render ($view, $locals = array()) {
+    // Presidented locals
+    $this->locals($locals);
+    $this->local('body', $view);
 
-    // Initialize template-parser
+    $config = Config::getInstance();
+    $layout = $this->local('layout');
 
-    $parser = new $parser();
-    if (!method_exists($parser, 'render')) {
-      throw new \Exception("It is expected of the Template-adapter to have a render-method.");
-    }
-    $this->end($parser->render($file));
+    // Initialize parser
+
+    $partial = function ($view, $locals = array()) use (&$partial) {
+      $config = Config::getInstance();
+
+      // View information
+      extract(pathinfo($view));
+      $dirname = $dirname !== '.' ? $dirname : $config->get('views');
+      $extension = isset($extension) ? $extension : $config->get('view extension');
+      $extension = '.'.ltrim($extension, '.');
+
+      // Parser
+      $parser = $config->get('view parser');
+      $parser = new $parser();
+      if (!method_exists($parser, 'render')) {
+        throw new \Exception("It is expected of the Template-adapter to have a render-method.");
+      }
+
+      extract($locals);
+      $rendered = $parser->render($dirname.$filename.$extension);
+      return eval(" ?>$rendered<?php ");
+    };
+
+    // Render layout and sub-views
+
+    $rendered = $partial($this->local('layout'), $this->locals());
+    $this->end($rendered);
   }
 
   /**

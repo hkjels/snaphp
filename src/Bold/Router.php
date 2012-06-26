@@ -15,7 +15,8 @@ class Router {
    */
 
   private $methods = array(
-      'connect'
+      'all'
+    , 'connect'
     , 'delete'
     , 'get'
     , 'head'
@@ -63,21 +64,25 @@ class Router {
   public function run () {
     global $hooks;
     $hooks->execute('pre-run', array('req' => &$this->req, 'res' => &$this->res));
+    $methods = array('all', $this->req->method);
 
     // Loop through and execute controller-code
 
-    foreach ($this->routes[$this->req->method] as $path => $callbacks) {
-      if (preg_match($path, $this->req->path) >= 1) {
-        foreach ($callbacks as $cb) {
+    foreach ($methods as $method) {
+      if (!isset($this->routes[$method])) continue;
+      foreach ($this->routes[$method] as $path => $callbacks) {
+        if (preg_match($path, $this->req->path) >= 1) {
+          foreach ($callbacks as $cb) {
 
-          /**
-           * Controllers are instantiated with request and response-objects as arguments
-           */
+            /**
+            * Controllers are instantiated with request and response-objects as arguments
+            */
 
-          if (Response::PROCEED != call_user_func_array($cb, array($this->req, $this->res))) {
-            $this->res->end();
-            $hooks->execute('post-run', array('req' => &$this->req, 'res' => &$this->res));
-            return;
+            if (Response::PROCEED != call_user_func_array($cb, array($this->req, $this->res))) {
+              $this->res->end();
+              $hooks->execute('post-run', array('req' => &$this->req, 'res' => &$this->res));
+              return;
+            }
           }
         }
       }
@@ -103,6 +108,7 @@ class Router {
     // Make string into regular expression
 
     $path = str_replace('/', '\/', $path);
+    $path = str_replace('*', '.*', $path);
     // $path = preg_replace('/\[\:(\w)+\]/g', '(\w)+', $path);
 
     return "/^$path\/?/";

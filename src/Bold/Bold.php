@@ -28,30 +28,33 @@ class Bold extends Router {
 
   const VERSION = '0.0.05';
 
-  protected $router, $req, $res;
+  public $req, $res;
 
   /**
    * Main
    *
-   * Initilalizes BOLD
    */
 
   function __construct () {
     global $hooks;
-
-    // Make request and response available
-    // from a protected scope
-
     $this->req = new Request();
     $this->res = new Response();
+    $hooks->execute('load', array(
+        'req' => &$this->req
+      , 'res' => &$this->res
+    ));
 
     // Default configurations
 
     $this->configure(function ($config) {
-      $config->set('view parser', 'Bold\Php', false);
+      $config->set('view parser', 'Bold\Php', false)
+        ->set('views', 'views/', false)
+        ->set('view extension', '.php');
     });
 
-    $hooks->execute('load', array('req' => &$this->req, 'res' => &$this->res));
+    // Default layout-view
+
+    $this->res->local('layout', 'layout');
   }
 
   /**

@@ -9,24 +9,91 @@ namespace Bold;
 
 class Config {
 
+  /**
+   * All stored configurations
+   */
+
   private $conf = array();
 
-  public static function enable ($key) {
-    if (isset($this->conf[$key])) $this->conf[$key]['enabled'] = true;
+  /**
+   * Enable
+   *
+   * Enable a certain configuration
+   *
+   * @param $key string
+   * @return Config
+   */
+
+  public function enable ($key) {
+    if ($this->disabled($key)) $this->conf[$key]['enabled'] = true;
     return $this;
   }
 
-  public static function disable ($key) {
-    if (isset($this->conf[$key])) {
+  /**
+   * Enabled
+   *
+   * Wether a configuration is enabled
+   *
+   * @param $key string
+   */
+
+  public function enabled ($key) {
+    return (isset($this->conf[$key]) && $this->conf[$key]['enabled']);
+  }
+
+  /**
+   * Disable
+   *
+   * Disable a certain configuration
+   *
+   * @param $key string
+   * @return Config
+   */
+
+  public function disable ($key) {
+    if ($this->enabled($key)) {
       if (!$this->conf[$key]['canDisable']) throw new \Exception("$key can not be disabled");
       $this->conf[$key]['enabled'] = false;
     }
     return $this;
   }
 
+
+  /**
+   * Disabled
+   *
+   * Wether a configuration is disabled
+   *
+   * @param $key string
+   */
+
+  public function disabled ($key) {
+    return (isset($this->conf[$key]) && !$this->conf[$key]['enabled']);
+  }
+
+  /**
+   * Get
+   *
+   * Returns the value of a given configuration
+   *
+   * @param $key string
+   * @return mixed
+   */
+
   public function get ($key) {
     return isset($this->conf[$key]) ? $this->conf[$key]['value'] : null;
   }
+
+  /**
+   * Set
+   *
+   * Add or change a configuration
+   *
+   * @param $key string
+   * @param $value mixed
+   * @param $canDisable boolean
+   * @return Config
+   */
 
   public function set ($key, $value, $canDisable = true) {
     if (!is_string($key)) {
@@ -38,6 +105,7 @@ class Config {
 
  /**
   * Singleton pattern
+  * There will only be one instance of this class
   */
 
   private static $__instance = NULL;
