@@ -12,6 +12,15 @@ use Bold\Response;
 /**
  * Bold
  *
+ * A lightweight, straightforward php-framework
+ *
+ * Usage:
+ *     $app = new Bold\Bold();
+ *     $app->get('/', function ($req, $res) {
+ *       $res->render('views/home');
+ *       return $res::DONE;
+ *     });
+ *     $app->run();
  */
 
 class Bold extends Router {
@@ -20,15 +29,18 @@ class Bold extends Router {
 
   protected $router, $req, $res;
 
+  /**
+   * Main
+   *
+   * Initilalizes BOLD
+   */
+
   function __construct () {
     $this->req = new Request();
     $this->res = new Response();
   }
 
-  protected function middleware () {
-    global $hooks;
-    $hooks->execute('middleware', array('req' => &$this->req, 'res' => &$this->res));
-  }
+  public function configure($env) {}
 
 }
 

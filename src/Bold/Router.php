@@ -53,9 +53,12 @@ class Router {
    */
 
   public function __call ($fn, $callbacks) {
+    global $hooks;
     if (!in_array($fn, $this->methods)) throw new \Exception("$fn is an unknown HTTP-method");
 
-    if ($this->times == 0) $this->middleware();
+    if ($this->times == 0) {
+      $hooks->execute('middleware', array('req' => &$this->req, 'res' => &$this->res));
+    }
     $this->times++;
 
     $path = array_shift($callbacks);
