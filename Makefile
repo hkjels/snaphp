@@ -1,4 +1,4 @@
-.PHONY: docs install uninstall
+.PHONY: docs
 
 # Determine environment
 
@@ -8,17 +8,8 @@ ifneq (,$(findstring dev,$(shell echo $$ENV)))
 endif
 
 # Create documentation
+# @see https://github.com/avalanche123/doxphp/
 
 docs:
 	bin/doxphp2docco src/Bold/*.php
-
-# Install dependencies using composer
-# @see http://getcomposer.org/
-
-install:
-	php bin/composer.phar install $(FLAG)
-
-uninstall:
-	rm -Rf vendor composer.lock
-	ls bin | grep -v composer.phar | xargs rm -f
 
