@@ -5,7 +5,7 @@ namespace Bold;
 /**
  * Response
  *
- * Response generated per request
+ *
  */
 
 class Response {
@@ -48,6 +48,8 @@ class Response {
 
     if (isset($value)) $this->lvars[$key] = $value;
     else return $this->lvars[$key];
+
+    return $this;
   }
 
   public function locals ($locals = array()) {
@@ -143,6 +145,10 @@ class Response {
     $this->send($body);
     $this->writeHeaders();
     $this->writeBody();
+
+    // Response is implicit, ready and finished
+
+    return self::DONE;
   }
 
   /**
@@ -169,14 +175,16 @@ class Response {
     // PS. The weird variable-names was made to not interfere
     // with existing locals
 
-    $partial = function ($view, $locals = array()) use (&$partial) {
+    $partial = function ($view, $lvars = array()) use (&$partial, $locals) {
+      $locals = array_merge($lvars, $locals);
       $config = Config::getInstance();
 
       // Viewname
 
       $F1leNAme = function () use ($view, $config) {
         extract(pathinfo($view));
-        $dirname = $dirname !== '.' ? $dirname : $config->get('views');
+        $dirname = $dirname !== '.' ? $dirname.'/' : '';
+        $dirname = $config->get('views').$dirname;
         $extension = isset($extension) ? $extension : $config->get('view extension');
         $extension = '.'.ltrim($extension, '.');
         return $dirname.$filename.$extension;
@@ -200,7 +208,7 @@ class Response {
     // Render layout and sub-views
 
     $rendered = $partial($view, $locals);
-    $this->end($rendered);
+    return $this->end($rendered);
   }
 
   /**
