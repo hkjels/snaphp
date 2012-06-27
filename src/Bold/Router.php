@@ -5,7 +5,7 @@ namespace Bold;
 /**
  * Router
  *
- * Trafficing at a friendly level. Connects URI's to controllers
+ * Friendly trafficing. Connects URI's to controllers
  */
 
 class Router {
@@ -32,8 +32,13 @@ class Router {
   protected $routes = array();
 
   /**
-   * addRoute
+   * Add route
    *
+   * Will add routes passed from __call that respect the private $methods
+   *
+   * @param $method string
+   * @param $path mixed
+   * @param $callbacks mixed
    */
 
   private function addRoute ($method, $path, $callbacks) {
@@ -42,7 +47,19 @@ class Router {
   }
 
   /**
-   * Methods
+   * Methods used for adding routes
+   *
+   * You can use any of the request-methods from the HTTP/1.1 spec
+   * and the additional `all`-method that will take any request.
+   * The callbacks can be any callable function, even anonymous functions.
+   * If you pass an array as callback, the first index would be your controller
+   * and the second would be your method. If the second index is missing, it
+   * will try to fire a method named `init`.
+   *
+   * @param $path mixed   array of options, regular expression or a string
+   * @param $cb mixed     array to instantiate a class, string to instantiate a
+   *                      function or an anonymous function
+   * @param [$cb..] mixed """
    *
    * @return Router
    */
@@ -75,9 +92,10 @@ class Router {
           foreach ($callbacks as $cb) {
 
             /**
-            * Controllers are instantiated with request and response-objects as arguments
-            */
+             * Controllers are instantiated with request and response-objects as arguments
+             */
 
+            if (is_array($cb) && count($cb) == 1) $cb[1] = 'init';
             if (Response::PROCEED != call_user_func_array($cb, array($this->req, $this->res))) {
               $this->res->end();
               $hooks->execute('post-run', array('req' => &$this->req, 'res' => &$this->res));
