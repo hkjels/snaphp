@@ -10,9 +10,6 @@ __A lightweight, straightforward php-framework__
       "require": {
         "hkjels/Bold": ">=0.0.05"
       }
-      , "config": {
-          "bin-dir": "bin/"
-      }
     }
 
     λ composer install

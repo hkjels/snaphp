@@ -133,8 +133,12 @@ class Response {
    */
 
   public function end ($body = '') {
+
     // Prevent re-runs
+
     if (!isset($this->body)) return;
+
+    // Add headers and body to output
 
     $this->send($body);
     $this->writeHeaders();
@@ -152,39 +156,50 @@ class Response {
    */
 
   public function render ($view, $locals = array()) {
-    // Presidented locals
-    $this->locals($locals);
-    $this->local('body', $view);
+    $locals = array_merge($locals, $this->locals());
 
-    $config = Config::getInstance();
-    $layout = $this->local('layout');
+    // Wether to use a parent layout
+
+    if ($locals['layout'] !== false) {
+      $locals['body'] = $view;
+      $view = $locals['layout'];
+    }
 
     // Initialize parser
+    // PS. The weird variable-names was made to not interfere
+    // with existing locals
 
     $partial = function ($view, $locals = array()) use (&$partial) {
       $config = Config::getInstance();
 
-      // View information
-      extract(pathinfo($view));
-      $dirname = $dirname !== '.' ? $dirname : $config->get('views');
-      $extension = isset($extension) ? $extension : $config->get('view extension');
-      $extension = '.'.ltrim($extension, '.');
+      // Viewname
+
+      $F1leNAme = function () use ($view, $config) {
+        extract(pathinfo($view));
+        $dirname = $dirname !== '.' ? $dirname : $config->get('views');
+        $extension = isset($extension) ? $extension : $config->get('view extension');
+        $extension = '.'.ltrim($extension, '.');
+        return $dirname.$filename.$extension;
+      };
 
       // Parser
-      $parser = $config->get('view parser');
-      $parser = new $parser();
-      if (!method_exists($parser, 'render')) {
+
+      $PaR23r = $config->get('view parser');
+      $PaR23r = new $PaR23r();
+      if (!method_exists($PaR23r, 'render')) {
         throw new \Exception("It is expected of the Template-adapter to have a render-method.");
       }
 
+      // Render
+
       extract($locals);
-      $rendered = $parser->render($dirname.$filename.$extension);
+      $rendered = $PaR23r->render($F1leNAme());
       return eval(" ?>$rendered<?php ");
     };
 
     // Render layout and sub-views
 
-    $rendered = $partial($this->local('layout'), $this->locals());
+    $rendered = $partial($view, $locals);
     $this->end($rendered);
   }
 
