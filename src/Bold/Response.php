@@ -11,12 +11,36 @@ namespace Bold;
 class Response {
 
   /**
-   * Response return-codes
+   * Response status-codes HTTP/1.1
    */
 
-  const ERROR = 0;
-  const PROCEED = 1;
-  const DONE = 2;
+  const PROCEED = 100;
+  const OK = 200;
+  const PERMANENT = 301;
+  const FOUND = 302;
+  const BAD_REQUEST = 400;
+  const UNAUTHORIZED = 401;
+  const FORBIDDEN = 403;
+  const NOT_FOUND = 404;
+  const INTERNAL_SERVER_ERROR = 500;
+
+  /**
+   * Status
+   */
+
+  public $statusCode = 100;
+
+  /**
+   * Content types
+   *
+   * Full names of contenttypes
+   */
+
+  protected $contentTypes = array(
+      'application/json'
+    , 'text/html'
+    , 'text/plain'
+  );
 
   /**
    * Responseheaders
@@ -38,6 +62,16 @@ class Response {
 
   protected $body = array();
 
+  /**
+   * Local
+   *
+   * Set and retrieve a local-variable
+   *
+   * @param [$key] string
+   * @param [$value] mixed
+   * @return mixed
+   */
+
   public function local () {
     if (func_num_args() > 1) list($key, $value) = func_get_args();
     else $key = func_get_arg(0);
@@ -52,9 +86,19 @@ class Response {
     return $this;
   }
 
+  /**
+   * Locals
+   *
+   * Set and retrieve local-variables
+   *
+   * @param [$locals] array
+   * @return mixed
+   */
+
   public function locals ($locals = array()) {
     if (empty($locals)) return $this->lvars;
     foreach ($locals as $key => $value) $this->local($key, $value);
+    return $this;
   }
 
   /**
@@ -68,7 +112,7 @@ class Response {
    */
 
   public function setHeader ($name, $content) {
-    $this->headers[] = "$name: $content";
+    $this->headers[$name] = $content;
     return $this;
   }
 
@@ -88,6 +132,52 @@ class Response {
   }
 
   /**
+   * Content type
+   *
+   * For setting the contenttype of a response
+   *
+   * @param $type string The literal representation or named type
+   * @return Response
+   */
+
+  public function contentType($type) {
+
+    // Find fullname of the contenttype
+
+    $type = array_shift(array_filter($this->contentTypes, function ($contentType) use ($type) {
+      if (!strstr($type, '/')) $contentType = substr($contentType, strstr($contentType, '/') + 1);
+      return strstr($contentType, $type);
+    }));
+
+    // Unknown type
+
+    if (empty($type)) {
+      throw new \InvalidArgumentException("$type is not a known contentType");
+    }
+
+    // Set contentType header
+
+    $this->setHeader('Content-Type', $type);
+    return $this;
+  }
+
+  /**
+   * Json
+   *
+   * Output any data as json
+   *
+   * @param $mixed mixed
+   * @param [$code] int
+   * @return integer
+   */
+
+  public function json ($mixed, $code = false) {
+    $json = json_encode($mixed);
+    if ($code) $this->status($code);
+    return $this->contentType('json')->end($json);
+  }
+
+  /**
    * Write headers
    *
    * Will write the buffered headers.
@@ -96,7 +186,7 @@ class Response {
    */
 
   protected function writeHeaders () {
-    foreach ($this->headers as $header) header($header);
+    foreach ($this->headers as $name => $content) header("$name: $content");
     return $this;
   }
 
@@ -108,7 +198,6 @@ class Response {
 
   protected function writeBody() {
     $body = implode($this->body);
-    unset($this->body);
     echo eval(' ?>'.$body.'<?php ');
   }
 
@@ -118,11 +207,13 @@ class Response {
    * Add to the response-body.
    *
    * @param $body string
+   * @param [$code] integer
    * @return Response
    */
 
-  public function send ($body = '') {
-    $this->body[] = $body;
+  public function send ($body, $code = false) {
+    $this->body[] = (string) $body;
+    if ($code) $this->status($code);
     return $this;
   }
 
@@ -134,11 +225,7 @@ class Response {
    * @param [$body] string
    */
 
-  public function end ($body = '') {
-
-    // Prevent re-runs
-
-    if (!isset($this->body)) return;
+  public function end ($body = '', $code = false) {
 
     // Add headers and body to output
 
@@ -148,7 +235,7 @@ class Response {
 
     // Response is implicit, ready and finished
 
-    return self::DONE;
+    return $this->status($code ? $code : self::OK);
   }
 
   /**
@@ -162,7 +249,7 @@ class Response {
    */
 
   public function render ($view, $locals = array()) {
-    $locals = array_merge($locals, $this->locals());
+    $locals = array_merge($this->locals(), $locals);
 
     // Wether to use a parent layout
 
@@ -176,7 +263,7 @@ class Response {
     // with existing locals
 
     $partial = function ($view, $lvars = array()) use (&$partial, $locals) {
-      $locals = array_merge($lvars, $locals);
+      $locals = array_merge($locals, $lvars);
       $config = Config::getInstance();
 
       // Viewname
@@ -207,8 +294,7 @@ class Response {
 
     // Render layout and sub-views
 
-    $rendered = $partial($view, $locals);
-    return $this->end($rendered);
+    return $this->end($partial($view, $locals));
   }
 
   /**
@@ -222,7 +308,7 @@ class Response {
 
   public function status ($code) {
     $this->statusCode = (int)$code;
-    return $this;
+    return $this->statusCode;
   }
 
 }

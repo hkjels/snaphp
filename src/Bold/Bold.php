@@ -19,14 +19,14 @@ use Bold\Response;
  *     $app = new Bold\Bold();
  *     $app->get('/', function ($req, $res) {
  *       $res->render('views/home');
- *       return $res::DONE;
+ *       return $res::OK;
  *     });
  *     $app->run();
  */
 
 class Bold extends Router {
 
-  const VERSION = '0.0.06';
+  const VERSION = '0.0.07';
 
   public $req, $res;
 
@@ -47,7 +47,8 @@ class Bold extends Router {
     // Default configurations
 
     $this->configure(function ($config) {
-      $config->set('view parser', 'Bold\Php', false)
+      $config
+        ->set('view parser', 'Bold\Php', false)
         ->set('views', 'views/', false)
         ->set('view extension', '.php');
     });

@@ -13,7 +13,7 @@ global $console;
 
 $GLOBALS['hooks'] = new Bold\Util\Hooks();
 global $hooks;
-$hooks->add('pre-run', function ($req, $res) {
+$hooks->add('load', function ($req, $res) {
   $res->setHeader('X-Powered-By', 'Bold');
 });
 
