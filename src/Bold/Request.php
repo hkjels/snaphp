@@ -10,7 +10,17 @@ namespace bold;
 
 class Request {
 
+  /**
+   * Headers
+   */
+
   protected $headers = array();
+
+  /**
+   * URI parameters
+   */
+
+  protected $params = array();
 
   /**
    * Populate request-object with real request-data
@@ -69,6 +79,43 @@ class Request {
     $accepts = $this->get('accept');
     return strstr($contentType, $type) !== false;
   }
+
+  /**
+   * Retrieve URI-parameters
+   *
+   * @param $name string
+   * @param [$default] mixed Default return-value
+   * @return mixed
+   */
+
+  public function param($name, $default = false) {
+    return isset($this->params[$name]) ? $this->params[$name] : $default;
+  }
+
+  /**
+   * Query parameters
+   *
+   * @param $name string
+   * @param [$default] mixed Default return-value
+   * @return mixed
+   */
+
+  public function query($name, $default = false) {
+    return isset($_GET[$name]) ? $_GET[$name] : $default;
+  }
+
+  /**
+   * Body parameters
+   *
+   * @param $name string
+   * @param [$default] mixed Default return-value
+   * @return mixed
+   */
+
+  public function body($name, $default = false) {
+    return isset($_POST[$name]) ? $_POST[$name] : $default;
+  }
+
 
 }
 
