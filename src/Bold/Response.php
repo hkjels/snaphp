@@ -102,17 +102,18 @@ class Response {
   }
 
   /**
-   * Set header
+   * Header
    *
-   * For setting a response-header.
+   * For setting/retrieving a response-header.
    *
    * @param $name string
    * @param $content string
    * return Response
    */
 
-  public function setHeader ($name, $content) {
-    $this->headers[$name] = $content;
+  public function header ($name, $content = '') {
+    if (!empty($content)) $this->headers[$name] = $content;
+    else return isset($this->headers[$name]) ? $this->headers[$name] : '';
     return $this;
   }
 
@@ -127,7 +128,98 @@ class Response {
    */
 
   public function setHeaders ($headers) {
-    foreach ($headers as $name => $content) $this->setHeader($name, $content);
+    foreach ($headers as $name => $content) $this->header($name, $content);
+    return $this;
+  }
+
+  /**
+   * Redirect
+   *
+   * Redirect to the given url
+   *
+   * @param $url string
+   * @param $code integer
+   */
+
+  public function redirect ($url, $code = 302) {
+    $this->status($code);
+
+    /**
+     * Special redirect-tokens
+     */
+
+    switch ($url) {
+      case 'home': $url = '/'; break;
+      case 'back': $url = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+    }
+
+    $this->header('location', $url);
+    return $this;
+  }
+
+  /**
+   * Set and retrieve cookies
+   *
+   * TODO Add max-age with strtotime
+   *
+   * @param $name string
+   * @param [$value] mixed
+   * @param [$opt] array
+   * @return mixed
+   */
+
+  public function cookie ($name, $value = '', $opt = array()) {
+    if (!is_string($name)) {
+      throw new \InvalidArgumentException('Only strings are supported as cookie-names');
+    }
+
+    if (empty($value)) {
+      if (isset($_COOKIE[$name])) return $_COOKIE[$name];
+      return false;
+    }
+
+    /**
+     * Cookie options
+     */
+
+    $opt = array_merge(
+      array(
+          'expire' => 0
+        , 'path' => ''
+        , 'domain' => ''
+        , 'secure' => false
+        , 'httponly' => false
+      )
+      , $opt
+    );
+    $opt['expire'] = is_string($opt['expire']) ? strtotime($opt['expire']) : $opt['expire'];
+
+    /**
+     * Set cookie
+     */
+
+    setcookie(
+        $name
+      , $value
+      , $opt['expire']
+      , $opt['path']
+      , $opt['domain']
+      , $opt['secure']
+      , $opt['httponly']
+    );
+
+    return $this;
+  }
+
+  /**
+   * Clear cookie
+   *
+   * @param $name string
+   * @return Response
+   */
+
+  public function clearCookie($name) {
+    setcookie($name, '', time() - 3600);
     return $this;
   }
 
@@ -157,7 +249,7 @@ class Response {
 
     // Set contentType header
 
-    $this->setHeader('Content-Type', $type);
+    $this->header('Content-Type', $type);
     return $this;
   }
 
@@ -225,7 +317,7 @@ class Response {
    * @param [$body] string
    */
 
-  public function end ($body = '', $code = false) {
+  public function end ($body = '', $code = 200) {
 
     // Add headers and body to output
 
@@ -235,7 +327,7 @@ class Response {
 
     // Response is implicit, ready and finished
 
-    return $this->status($code ? $code : self::OK);
+    return $this->status($code);
   }
 
   /**
