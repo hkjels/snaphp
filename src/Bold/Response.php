@@ -67,8 +67,8 @@ class Response {
    *
    * Set and retrieve a local-variable
    *
-   * @param [$key] string
-   * @param [$value] mixed
+   * @param string [$key]
+   * @param mixed [$value]
    * @return mixed
    */
 
@@ -91,7 +91,7 @@ class Response {
    *
    * Set and retrieve local-variables
    *
-   * @param [$locals] array
+   * @param array [$locals]
    * @return mixed
    */
 
@@ -106,8 +106,8 @@ class Response {
    *
    * For setting/retrieving a response-header.
    *
-   * @param $name string
-   * @param $content string
+   * @param string $name
+   * @param string $content
    * return Response
    */
 
@@ -123,7 +123,7 @@ class Response {
    * Pass it an associative array of header-name and content
    * to set multiple headers at a time.
    *
-   * @param $headers array
+   * @param array $headers
    * @return Response
    */
 
@@ -137,8 +137,8 @@ class Response {
    *
    * Redirect to the given url
    *
-   * @param $url string
-   * @param $code integer
+   * @param string $url
+   * @param integer $code
    */
 
   public function redirect ($url, $code = 302) {
@@ -162,9 +162,9 @@ class Response {
    *
    * TODO Add max-age with strtotime
    *
-   * @param $name string
-   * @param [$value] mixed
-   * @param [$opt] array
+   * @param string $name
+   * @param mixed [$value]
+   * @param array [$opt]
    * @return mixed
    */
 
@@ -214,7 +214,7 @@ class Response {
   /**
    * Clear cookie
    *
-   * @param $name string
+   * @param string $name
    * @return Response
    */
 
@@ -228,7 +228,7 @@ class Response {
    *
    * For setting the contenttype of a response
    *
-   * @param $type string The literal representation or named type
+   * @param string $type The literal representation or named type
    * @return Response
    */
 
@@ -258,8 +258,8 @@ class Response {
    *
    * Output any data as json
    *
-   * @param $mixed mixed
-   * @param [$code] int
+   * @param mixed $mixed
+   * @param int [$code]
    * @return integer
    */
 
@@ -298,8 +298,8 @@ class Response {
    *
    * Add to the response-body.
    *
-   * @param $body string
-   * @param [$code] integer
+   * @param string $body
+   * @param integer [$code]
    * @return Response
    */
 
@@ -314,7 +314,7 @@ class Response {
    *
    * Will end the response-body and output it
    *
-   * @param [$body] string
+   * @param string [$body]
    */
 
   public function end ($body = '', $code = 200) {
@@ -335,8 +335,8 @@ class Response {
    *
    * Render a given template using Response->local('layout') as base.
    *
-   * @param $file string
-   * @param $locals array Array of local variables
+   * @param string $file
+   * @param array $locals Array of local variables
    * @return Response
    */
 
@@ -394,7 +394,7 @@ class Response {
    *
    * Set an HTTP-statuscode.
    *
-   * @param $code integer
+   * @param integer $code
    * @return Response
    */
 

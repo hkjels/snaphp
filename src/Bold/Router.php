@@ -37,9 +37,9 @@ class Router {
    *
    * Will add routes passed from __call that respect the private $methods
    *
-   * @param $method string
-   * @param $path mixed
-   * @param $callbacks mixed
+   * @param string $method
+   * @param mixed $path
+   * @param mixed $callbacks
    */
 
   private function addRoute ($method, $path, $callbacks) {
@@ -58,10 +58,10 @@ class Router {
    * and the second would be your method. If the second index is missing, it
    * will try to fire a method named `init`.
    *
-   * @param $path mixed   array of options, regular expression or a string
-   * @param $cb mixed     array to instantiate a class, string to instantiate a
+   * @param mixed $path   array of options, regular expression or a string
+   * @param mixed $cb     array to instantiate a class, string to instantiate a
    *                      function or an anonymous function
-   * @param [$cb..] mixed """
+   * @param mixed [$cb..] """
    *
    * @return Router
    */
@@ -82,7 +82,6 @@ class Router {
    */
 
   public function run () {
-    global $console;
     $methods = array('all', $this->req->method, 'path');
 
     // Loop through and execute controller-code
@@ -178,7 +177,7 @@ class Router {
   /**
    * Normalize path to regular expression
    *
-   * @param $path string
+   * @param string $path
    * @return string Regular-expression
    */
 

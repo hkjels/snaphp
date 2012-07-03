@@ -40,7 +40,7 @@ class Request {
    *
    * Retrieve a given header
    *
-   * @param $name string
+   * @param string $name
    * @return string
    */
 
@@ -56,7 +56,7 @@ class Request {
    * Check request for content-type with shortnames
    * Eg. Request->is('html')
    *
-   * @param $type string
+   * @param string $type
    * @return boolean
    */
 
@@ -71,7 +71,7 @@ class Request {
    * Check if request allows our wanted response
    * Eg. Request->accepts('html')
    *
-   * @param $type string
+   * @param string $type
    * @return boolean
    */
 
@@ -83,8 +83,8 @@ class Request {
   /**
    * Retrieve URI-parameters
    *
-   * @param $name string
-   * @param [$default] mixed Default return-value
+   * @param string $name
+   * @param mixed [$default] Default return-value
    * @return mixed
    */
 
@@ -95,8 +95,8 @@ class Request {
   /**
    * Query parameters
    *
-   * @param $name string
-   * @param [$default] mixed Default return-value
+   * @param string $name
+   * @param mixed [$default] Default return-value
    * @return mixed
    */
 
@@ -107,8 +107,8 @@ class Request {
   /**
    * Body parameters
    *
-   * @param $name string
-   * @param [$default] mixed Default return-value
+   * @param string $name
+   * @param mixed [$default] Default return-value
    * @return mixed
    */
 

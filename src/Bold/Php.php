@@ -15,7 +15,7 @@ class Php {
    *
    * Will render and return the given view
    *
-   * @param $file string
+   * @param string $file
    * @return string
    */
 

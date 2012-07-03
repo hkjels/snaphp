@@ -20,7 +20,7 @@ class Config {
    *
    * Enable a certain configuration
    *
-   * @param $key string
+   * @param string $key
    * @return Config
    */
 
@@ -34,7 +34,7 @@ class Config {
    *
    * Wether a configuration is enabled
    *
-   * @param $key string
+   * @param string $key
    */
 
   public function enabled ($key) {
@@ -46,7 +46,7 @@ class Config {
    *
    * Disable a certain configuration
    *
-   * @param $key string
+   * @param string $key
    * @return Config
    */
 
@@ -64,7 +64,7 @@ class Config {
    *
    * Wether a configuration is disabled
    *
-   * @param $key string
+   * @param string $key
    */
 
   public function disabled ($key) {
@@ -76,7 +76,7 @@ class Config {
    *
    * Returns the value of a given configuration
    *
-   * @param $key string
+   * @param string $key
    * @return mixed
    */
 
@@ -89,9 +89,9 @@ class Config {
    *
    * Add or change a configuration
    *
-   * @param $key string
-   * @param $value mixed
-   * @param $canDisable boolean
+   * @param string $key
+   * @param mixed $value
+   * @param boolean $canDisable
    * @return Config
    */
 

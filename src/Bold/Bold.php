@@ -61,8 +61,8 @@ class Bold extends Router {
    *
    * Add environment specific configurations
    *
-   * @param [$env] string
-   * @param $fn function
+   * @param string [$env]
+   * @param function $fn
    * @return Bold
    */
 
