@@ -1,3 +1,4 @@
+[![Build Status](https://secure.travis-ci.org/hkjels/Bold.png)](http://travis-ci.org/hkjels/Bold)
 
 # Bold
 
