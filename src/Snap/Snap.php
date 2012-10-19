@@ -1,42 +1,48 @@
 <?php
-namespace Bold;
+namespace Snap;
 
 /**
  * Dependencies
  */
 
-use Bold\Config;
-use Bold\Router;
-use Bold\Request;
-use Bold\Response;
+use Snap\Config;
+use Snap\Router;
+use Snap\Request;
+use Snap\Response;
 
 /**
- * Bold
+ * Snap
  *
  * A lightweight, straightforward php-framework
  *
  * Usage:
- *     $app = new Bold\Bold();
- *     $app->get('/', function ($req, $res) {
- *       $res->render('views/home');
- *       return $res::OK;
- *     });
- *     $app->run();
+ *     $app = new Snap\Snap();
+ *     $app
+ *        ->get('/', function ($req, $res) {
+ *          return $res->render('views/home');
+ *        })
+ *        ->run();
  */
 
-class Bold extends Router {
-
-  public $req, $res;
+class Snap extends Router {
 
   /**
-   * Main
-   *
+   * Request and response-object used throughout the
+   * lifespan of your application.
+   */
+
+  protected $req, $res;
+
+  /**
+   * Instantiates dependencies, executes load-hook
+   * and adds a set of default-configurations.
    */
 
   function __construct () {
-    global $hooks;
     $this->req = new Request();
     $this->res = new Response();
+
+    global $hooks;
     $hooks->execute('load', array(
         'req' => &$this->req
       , 'res' => &$this->res
@@ -46,7 +52,7 @@ class Bold extends Router {
 
     $this->configure(function ($config) {
       $config
-        ->set('view parser', 'Bold\Php', false)
+        ->set('view parser', 'Snap\Php', false)
         ->set('views', 'views/', false)
         ->set('view extension', '.php');
     });
@@ -63,24 +69,27 @@ class Bold extends Router {
    *
    * @param string [$env]
    * @param function $fn
-   * @return Bold
+   * @return Snap
    */
 
   public function configure() {
     global $environment;
 
     // Named arguments
+
     $args = func_get_args();
     if (is_string($args[0])) list($env, $fn) = $args;
     else {
       $env = 'all';
-      $fn = $args[0];
+      $fn = array_shift($args);
     }
 
     // $fn must be callable
+
     if (!is_callable($fn)) throw new \Exception("$fn is not a callable configuration");
 
     // Only activate configurations for the current environment
+
     if (strstr($environment, $env) || $env === 'all') {
       return call_user_func_array($fn, array('config' => Config::getInstance()));
     }

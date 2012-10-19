@@ -1,6 +1,6 @@
 <?php
 
-namespace Bold;
+namespace Snap;
 
 /**
  * Response
@@ -14,14 +14,14 @@ class Response {
    * Response status-codes HTTP/1.1
    */
 
-  const PROCEED = 100;
-  const OK = 200;
-  const PERMANENT = 301;
-  const FOUND = 302;
-  const BAD_REQUEST = 400;
-  const UNAUTHORIZED = 401;
-  const FORBIDDEN = 403;
-  const NOT_FOUND = 404;
+  const PROCEED               = 100;
+  const OK                    = 200;
+  const PERMANENT             = 301;
+  const FOUND                 = 302;
+  const BAD_REQUEST           = 400;
+  const UNAUTHORIZED          = 401;
+  const FORBIDDEN             = 403;
+  const NOT_FOUND             = 404;
   const INTERNAL_SERVER_ERROR = 500;
 
   /**
@@ -263,10 +263,9 @@ class Response {
    * @return integer
    */
 
-  public function json ($mixed, $code = false) {
+  public function json ($mixed, $code = 200) {
     $json = json_encode($mixed);
-    if ($code) $this->status($code);
-    return $this->contentType('json')->end($json);
+    return $this->contentType('json')->end($json, $code);
   }
 
   /**

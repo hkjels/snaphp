@@ -1,6 +1,6 @@
-[![Build Status](https://secure.travis-ci.org/hkjels/Bold.png)](http://travis-ci.org/hkjels/Bold)
+[![Build Status](https://secure.travis-ci.org/hkjels/Snaphp.png)](http://travis-ci.org/hkjels/Snaphp)
 
-# Bold
+# Snaphp
 
 __A lightweight, straightforward php-framework__
 
@@ -9,7 +9,7 @@ __A lightweight, straightforward php-framework__
 
     {
       "require": {
-        "hkjels/Bold": ">=0.0.05"
+        "hkjels/Snaphp": ">=0.0.05"
       }
     }
 
@@ -18,7 +18,7 @@ __A lightweight, straightforward php-framework__
 
 ## Usage
 
-    $app = new Bold\Bold();
+    $app = new Snap\Snap();
     $app->get('/', function ($req, $res) {
       $res->write('pong!');
       echo 'Ping ';

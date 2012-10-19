@@ -1,18 +1,23 @@
+
 # features/Route.feature
-Feature: Route
-  In order to output a proper page
-  As a browser
-  I need to normalize the url
 
+Feature: Normalize routes
+  In order to route a request
+  As a router
+  I need to normalize paths to regular expressions
 
+  Scenario: String to regEx
+    Given A string '/ping/pong/'
+    Then I should get:
+      "^\/ping\/pong\/$"
 
-Scenario: Output 5 normalized paths
-  Given The first segment is "test"
-  And I have a param named "foo"
-  And I have a param named "bar"
-  When I run "normalizePath"
-  Then I should get:
-    """
-    bar
-    foo
-    """
+  Scenario: Named parameters
+    Given The string '/:type/:id/'
+    Then I should get:
+      "^\/([\w]+)\/([\w]+)\/$"
+
+  Scenario: Array to regEx
+    Given The array ['foo', 'bar']
+    Then I should get:
+      "^\/foo\/bar\/$"
+

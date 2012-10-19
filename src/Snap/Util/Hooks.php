@@ -1,6 +1,6 @@
 <?php
 
-namespace Bold\Util;
+namespace Snap\Util;
 
 /**
  * Hooks

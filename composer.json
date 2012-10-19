@@ -1,27 +1,27 @@
 {
-    "name": "hkjels/bold"
+    "name": "hkjels/snaphp"
   , "authors": [{
       "name": "Henrik Kjelsberg"
     , "email": "henrik@kjelsberg.net"
     , "homepage": "http://take.no/"
     , "role": "developer"
   }]
-  , "version": "0.0.08"
-  , "description": "A lightweight, straightforward php-framework"
-  , "keywords": ["bold", "framework", "sinatra", "express", "simple", "SPDY"]
-  , "homepage": "http://hkjels.github.com/bold/"
+  , "version": "0.0.01"
+  , "description": "A lightweight, straightforward php-framework. Inspired by express & snap."
+  , "keywords": ["snaphp", "snap", "framework", "express", "simple", "SPDY"]
+  , "homepage": "http://hkjels.github.com/snaphp/"
   , "license": "MIT"
   , "type": "library"
   , "require": {
       "php": ">=5.3.10"
   }
   , "require-dev": {
-      "behat/behat": ">=2.4"
+      "behat/behat": ">=2.4.@stable"
     , "doxphp/doxphp": ">=0.2.0"
   }
   , "autoload": {
       "files": ["src/bootstrap.php"]
-    , "psr-0": { "Bold": "src/" }
+    , "psr-0": { "Snap": "src/" }
   }
   , "config": {
       "bin-dir": "bin/"

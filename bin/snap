@@ -1,0 +1,51 @@
+#!/usr/bin/env php
+
+<?php
+
+/**
+ * Pre-requisits
+ */
+
+$args = implode($argv);
+$template = 'php';
+define('ROOT', dirname(__FILE__).'/..');
+
+/**
+ * Help / usage
+ */
+
+$help = <<<EOT
+
+    Usage: snap [options] projectname
+
+    Options:
+
+        -h, --help        Output framework help
+        -V, --version     Output framework version
+        -t, --template    (jade|markdown|php). default=php
+
+EOT;
+
+/**
+ * Help and version
+ */
+
+if (preg_match('/(\-V|\-\-version)/', $args)) exit("$composer->version\n");
+if (preg_match('/(\-h|\-\-help)/', $args)) exit("$help\n");
+
+/**
+ * Arguments
+ */
+
+while ($arg = array_shift($args) !== null) {
+  if (preg_match('/^-[-]?t/', $arg)) $template = array_shift($args);
+}
+
+/*
+if (preg_match('/(\-t|\-\-template)\.+(jade|php|mark)\b/', $args, $matches)) {
+  $template = $matches[2];
+}
+*/
+
+exit($template);
+

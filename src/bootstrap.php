@@ -1,19 +1,21 @@
 <?php
 
+namespace Snap;
+
 /**
  * Php > javascript console
  */
 
-$GLOBALS['console'] = new Bold\Util\Console();
+$GLOBALS['console'] = new Util\Console();
 global $console;
 
 /**
  * Hooks
  */
 
-$GLOBALS['hooks'] = new Bold\Util\Hooks();
+$GLOBALS['hooks'] = new Util\Hooks();
 global $hooks;
 $hooks->add('load', function ($req, $res) {
-  $res->header('X-Powered-By', 'Bold');
+  $res->header('X-Powered-By', 'Snaphp');
 });
 

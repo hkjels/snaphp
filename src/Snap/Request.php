@@ -1,6 +1,6 @@
 <?php
 
-namespace bold;
+namespace Snap;
 
 /**
  * Request
@@ -26,11 +26,8 @@ class Request {
    * Populate request-object with real request-data
    */
 
-  function __construct() {
-    $headers = getallheaders();
-    foreach ($headers as $name => $content) {
-      $this->headers[strtolower($name)] = $content;
-    }
+  function __construct () {
+    $this->headers = getallheaders();
     $this->path = $_SERVER['REQUEST_URI'];
     $this->method = strtolower($_SERVER['REQUEST_METHOD']);
   }
@@ -44,9 +41,10 @@ class Request {
    * @return string
    */
 
-  public function get($name) {
+  public function get ($name) {
     $name = strtolower($name);
-    if (isset($this->headers[$name])) return $this->headers[$name];
+    $headers = array_change_key_case($this->headers, CASE_LOWER);
+    if (isset($headers[$name])) return $headers[$name];
     return false;
   }
 
@@ -60,7 +58,7 @@ class Request {
    * @return boolean
    */
 
-  public function is($type) {
+  public function is ($type) {
     $contentType = $this->get('content-type');
     return strstr($contentType, $type) !== false;
   }
@@ -75,7 +73,7 @@ class Request {
    * @return boolean
    */
 
-  public function accepts($type) {
+  public function accepts ($type) {
     $accepts = $this->get('accept');
     return strstr($contentType, $type) !== false;
   }
@@ -88,8 +86,33 @@ class Request {
    * @return mixed
    */
 
-  public function param($name, $default = false) {
-    return isset($this->params[$name]) ? $this->params[$name] : $default;
+  public function param ($name, $default = false) {
+    $name = trim($name, ':');
+    if (isset($this->params[$name])) return $this->params[$name];
+    else if ($this->query($name)) return $this->query($name);
+    else if ($this->body($name)) return $this->body($name);
+    else return $default;
+  }
+
+  /**
+   * Set param
+   *
+   * Set a request-uri parameter.
+   *
+   * @param string $name
+   * @param scalar $value
+   * @return Request
+   */
+
+  public function setParam($name, $value) {
+    if (!is_string($name)) {
+      throw new \InvalidArgumentException('Param key must be of type string');
+    }
+    if (!is_scalar($value)) {
+      throw new \InvalidArgumentException('Param value must be a scalar value');
+    }
+    $this->params[(string)$name] = $value;
+    return $this;
   }
 
   /**
@@ -100,7 +123,7 @@ class Request {
    * @return mixed
    */
 
-  public function query($name, $default = false) {
+  public function query ($name, $default = false) {
     return isset($_GET[$name]) ? $_GET[$name] : $default;
   }
 
@@ -112,10 +135,9 @@ class Request {
    * @return mixed
    */
 
-  public function body($name, $default = false) {
+  public function body ($name, $default = false) {
     return isset($_POST[$name]) ? $_POST[$name] : $default;
   }
-
 
 }
 

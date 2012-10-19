@@ -11,5 +11,5 @@ endif
 # @see https://github.com/avalanche123/doxphp/
 
 docs:
-	bin/doxphp2docco src/Bold/*.php
+	bin/doxphp2docco src/Snap/*.php
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bold;
+namespace Snap;
 
 /**
  * Config
@@ -104,8 +104,7 @@ class Config {
   }
 
  /**
-  * Singleton pattern
-  * There will only be one instance of this class
+  * Singleton please
   */
 
   private static $__instance = NULL;
