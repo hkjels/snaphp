@@ -1,8 +1,8 @@
-[![Build Status](https://secure.travis-ci.org/hkjels/Snaphp.png)](http://travis-ci.org/hkjels/Snaphp)
+[![Build Status](https://secure.travis-ci.org/hkjels/snaphp.png)](http://travis-ci.org/hkjels/Snaphp)
 
 # Snaphp
 
-__A lightweight, straightforward php-framework__
+__A lightweight, straightforward php-framework. Inspired by express & snap.__
 
 
 ## Install using [composer](http://getcomposer.org/)
