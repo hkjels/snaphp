@@ -9,7 +9,7 @@ __A lightweight, straightforward php-framework. Inspired by express & snap.__
 
     {
       "require": {
-        "hkjels/Snaphp": ">=0.0.05"
+        "hkjels/snaphp": ">=0.0.01"
       }
     }
 
