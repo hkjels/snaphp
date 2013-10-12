@@ -6,7 +6,7 @@
     , "homepage": "http://take.no/"
     , "role": "developer"
   }]
-  , "version": "0.0.01"
+  , "version": "0.0.02"
   , "description": "A lightweight, straightforward php-framework. Inspired by express & snap."
   , "keywords": ["snaphp", "snap", "framework", "express", "simple", "SPDY"]
   , "homepage": "http://hkjels.github.com/snaphp/"
